@@ -1,0 +1,25 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['server_IP:port']
+        labels:
+          instance: 'instance-name'
+
+  - job_name: 'docker-daemon'
+    static_configs:
+      - targets: ['server_IP:port']
+        labels:
+          server_name: 'server-name'
+
+rule_files:
+  - './rules/test.yml'
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - 'server_IP:port'
