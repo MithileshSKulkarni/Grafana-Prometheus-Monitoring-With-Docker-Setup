@@ -1,0 +1,24 @@
+global:
+  resolve_timeout: 5m
+  smtp_smarthost: 'your-smtp-host'
+  smtp_from: 'email-id'
+  smtp_auth_username: 'username'
+  smtp_auth_password: 'password'
+  smtp_require_tls: true
+#  smtp_tls_skip_verify: false
+
+route:
+  receiver: 'email-notifier'
+  group_by: ['alertname', 'severity']
+  # ...
+
+receivers:
+  - name: 'email-notifier'
+    email_configs:
+      - to: 'email.id'
+        from: 'email.id'
+        smarthost: 'smtp.gmail.com:587'
+        auth_username: 'email-id'
+        auth_identity: 'email-id'
+        auth_password: 'password'
+        require_tls: true
