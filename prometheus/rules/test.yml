@@ -1,0 +1,32 @@
+groups:
+  - name: Target_down
+    rules:
+    - alert: InstanceDown
+      expr: up == 0
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Instance {{ $labels.instance }} down"
+        description: "Instance {{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute."
+  - name: server_alerts
+    rules:
+      - alert: HighCPULoad_server-name
+        expr: 100 - (avg(irate(node_cpu_seconds_total{mode="idle", instance="server-ip:port"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: critical
+          server: "server_ip"  # Replace with the appropriate server name or identifier
+        annotations:
+          summary: "High CPU load detected on {{ $labels.server }}"
+          description: "CPU usage is above 20% on server {{ $labels.server }}."
+
+      - alert: LowDiskSpace_server-name
+        expr: node_filesystem_avail_bytes{instance="server-ip:port"} / node_filesystem_size_bytes{instance="server-ip:port"} * 100 < 20
+        for: 5m
+        labels:
+          severity: warning
+          server: "server_ip"  # Replace with the appropriate server name or identifier
+        annotations:
+          summary: "Low disk space detected on {{ $labels.server }}"
+          description: "Disk space is below 80% on server {{ $labels.server }}."
